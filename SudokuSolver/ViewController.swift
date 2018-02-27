@@ -12,15 +12,15 @@ import AVFoundation
 class ViewController: UIViewController, CameraBufferDelegate {
 
     @IBOutlet weak var imgView: UIImageView!
-    @IBOutlet weak var pictureButton: UIButton!
+    @IBOutlet weak var picButton: UIButton!
     
     var camBuffer: CameraBuffer!
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        pictureButton.layer.cornerRadius = pictureButton.frame.size.width / 2
-        pictureButton.clipsToBounds = true
+        picButton.layer.cornerRadius = picButton.frame.size.width / 2
+        picButton.clipsToBounds = true
         
         camBuffer = CameraBuffer()
         camBuffer.delegate = self
