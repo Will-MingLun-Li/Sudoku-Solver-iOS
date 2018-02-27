@@ -18,6 +18,7 @@ class CameraBuffer: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate {
     private let sessionQueue = DispatchQueue(label: "session queue")
     private let captureSession = AVCaptureSession()
     private let context = CIContext()
+    var capPhotoOutput: AVCapturePhotoOutput?
     
     weak var delegate: CameraBufferDelegate?
     
@@ -30,10 +31,17 @@ class CameraBuffer: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate {
     }
     
     private func configureSession() {
+        // Set up the camera to receive camera preview
         guard let captureDevice = AVCaptureDevice.default(for: AVMediaType.video) else { return }
         guard let captureDeviceInput = try? AVCaptureDeviceInput(device: captureDevice) else { return }
         guard captureSession.canAddInput(captureDeviceInput) else { return }
         captureSession.addInput(captureDeviceInput)
+        
+        // Setup the output so pictures can be taken
+        capPhotoOutput = AVCapturePhotoOutput()
+        capPhotoOutput?.isHighResolutionCaptureEnabled = true
+        guard captureSession.canAddOutput(capPhotoOutput!) else { return }
+        captureSession.addOutput(capPhotoOutput!)
         
         let videoOutput = AVCaptureVideoDataOutput()
         videoOutput.setSampleBufferDelegate(self, queue: DispatchQueue(label: "sample buffer"))
@@ -54,6 +62,34 @@ class CameraBuffer: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate {
         guard let uiImage = imageFromSampleBuffer(sampleBuffer: sampleBuffer) else { return }
         DispatchQueue.main.async { [unowned self] in
             self.delegate?.captured(image: uiImage)
+        }
+    }
+}
+
+extension CameraBuffer : AVCapturePhotoCaptureDelegate {
+    func photoOutput(_ captureOutput: AVCapturePhotoOutput,
+                     didFinishProcessingPhoto photoSampleBuffer: CMSampleBuffer?,
+                     previewPhoto previewPhotoSampleBuffer: CMSampleBuffer?,
+                     resolvedSettings: AVCaptureResolvedPhotoSettings,
+                     bracketSettings: AVCaptureBracketedStillImageSettings?,
+                     error: Error?) {
+        // Make sure we get some photo sample buffer
+        guard error == nil,
+            let photoSampleBuffer = photoSampleBuffer else {
+                print("Error capturing photo: \(String(describing: error))")
+                return
+        }
+        
+        // Convert photo same buffer to a jpeg image data by using AVCapturePhotoOutput
+        guard let imageData = AVCapturePhotoOutput.jpegPhotoDataRepresentation(forJPEGSampleBuffer: photoSampleBuffer, previewPhotoSampleBuffer: previewPhotoSampleBuffer) else {
+            return
+        }
+        
+        // Initialise an UIImage with our image data
+        let capturedImage = UIImage.init(data: imageData , scale: 1.0)
+        if let image = capturedImage {
+            // Save our captured image to photos album
+            UIImageWriteToSavedPhotosAlbum(image, nil, nil, nil)
         }
     }
 }

@@ -22,12 +22,31 @@
                                 <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             </imageView>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="tHC-3g-dS8">
+                                <rect key="frame" x="20" y="572" width="335" height="75"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="75" id="YR4-4M-RwX"/>
+                                    <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="75" id="d7f-R2-yJg"/>
+                                    <constraint firstAttribute="height" constant="75" id="fHW-Rn-Md3"/>
+                                </constraints>
+                                <state key="normal" title="Button"/>
+                                <connections>
+                                    <action selector="takePictureOnTap:" destination="BYZ-38-t0r" eventType="touchUpInside" id="3Lv-Ts-iZ0"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <constraints>
+                            <constraint firstItem="tHC-3g-dS8" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" constant="552" id="DZP-u1-EDu"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="tHC-3g-dS8" secondAttribute="trailing" constant="20" id="vV3-bV-cOc"/>
+                            <constraint firstItem="tHC-3g-dS8" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="20" id="wYh-5t-u2p"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="bottom" secondItem="tHC-3g-dS8" secondAttribute="bottom" constant="20" id="xse-Ot-XRc"/>
+                        </constraints>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                     </view>
                     <connections>
                         <outlet property="imgView" destination="ntM-9s-7R6" id="vVe-gG-mBY"/>
+                        <outlet property="pictureButton" destination="tHC-3g-dS8" id="l3I-4I-Mpo"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
