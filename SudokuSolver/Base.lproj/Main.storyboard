@@ -28,7 +28,6 @@
                                 <color key="backgroundColor" cocoaTouchSystemColor="lightTextColor"/>
                                 <constraints>
                                     <constraint firstAttribute="width" secondItem="qpl-2b-AQ8" secondAttribute="height" multiplier="1:1" id="RWX-NM-KI7"/>
-                                    <constraint firstAttribute="width" constant="75" id="kgI-Ng-lv0"/>
                                 </constraints>
                                 <state key="normal" image="Camera"/>
                                 <connections>

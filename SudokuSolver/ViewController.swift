@@ -15,6 +15,7 @@ class ViewController: UIViewController, CameraBufferDelegate {
     @IBOutlet weak var picButton: UIButton!
     
     var camBuffer: CameraBuffer!
+    var solveSudoku: SudokuClass!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -24,6 +25,32 @@ class ViewController: UIViewController, CameraBufferDelegate {
         
         camBuffer = CameraBuffer()
         camBuffer.delegate = self
+        
+        solveSudoku = SudokuClass()
+        
+        /* let example: SudokuClass.SudokuBoard = [
+            [5, 3, 0,  0, 7, 0,  0, 0, 0],
+            [6, 0, 0,  1, 9, 5,  0, 0, 0],
+            [0, 9, 8,  0, 0, 0,  0, 6, 0],
+            
+            [8, 0, 0,  0, 6, 0,  0, 0, 3],
+            [4, 0, 0,  8, 0, 3,  0, 0, 1],
+            [7, 0, 0,  0, 2, 0,  0, 0, 6],
+            
+            [0, 6, 0,  0, 0, 0,  2, 8, 0],
+            [0, 0, 0,  4, 1, 9,  0, 0, 5],
+            [0, 0, 0,  0, 8, 0,  0, 7, 0],
+        ]
+        
+        print("\nPuzzle:")
+        solveSudoku.printSudoku(example)
+        if let solutionForExample = solveSudoku.SolveSudoku(example) {
+            print("\nSolution:")
+            solveSudoku.printSudoku(solutionForExample)
+        }
+        else {
+            print("No solution")
+        } */
     }
     
     func captured(image: UIImage) {
