@@ -54,12 +54,8 @@ class ViewController: UIViewController, CameraBufferDelegate {
     }
     
     func captured(image: UIImage) {
+        // Setting up camera view
         imgView.image = image
-    }
-
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
     }
     
     @IBAction func takePictureOnTap(_ sender: Any) {
@@ -72,7 +68,7 @@ class ViewController: UIViewController, CameraBufferDelegate {
         // Set photo settings for our need
         photoSettings.isAutoStillImageStabilizationEnabled = true
         photoSettings.isHighResolutionPhotoEnabled = true
-        photoSettings.flashMode = .auto
+        photoSettings.flashMode = .off
         
         // Call capturePhoto method by passing our photo settings and a delegate implementing AVCapturePhotoCaptureDelegate
         capturePhotoOutput.capturePhoto(with: photoSettings, delegate: camBuffer)

@@ -60,6 +60,7 @@ class CameraBuffer: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate {
     
     func captureOutput(_ output: AVCaptureOutput, didOutput sampleBuffer: CMSampleBuffer, from connection: AVCaptureConnection) {
         guard let uiImage = imageFromSampleBuffer(sampleBuffer: sampleBuffer) else { return }
+        //self.imageDelegate?.analyzed(originalImg: lolimage)
         DispatchQueue.main.async { [unowned self] in
             self.delegate?.captured(image: uiImage)
         }
@@ -79,17 +80,22 @@ extension CameraBuffer : AVCapturePhotoCaptureDelegate {
                 print("Error capturing photo: \(String(describing: error))")
                 return
         }
-        
+
         // Convert photo same buffer to a jpeg image data by using AVCapturePhotoOutput
         guard let imageData = AVCapturePhotoOutput.jpegPhotoDataRepresentation(forJPEGSampleBuffer: photoSampleBuffer, previewPhotoSampleBuffer: previewPhotoSampleBuffer) else {
             return
         }
-        
+
         // Initialise an UIImage with our image data
-        let capturedImage = UIImage.init(data: imageData , scale: 1.0)
+        let capturedImage = UIImage.init(data: imageData, scale: 1.0)
         if let image = capturedImage {
             // Save our captured image to photos album
             UIImageWriteToSavedPhotosAlbum(image, nil, nil, nil)
+            //self.imageDelegate?.analyzed(originalImg: image)
+            //imageVC.originalImage = image
+            //imageVC.imageController(originalImg: image)
         }
     }
 }
+
+

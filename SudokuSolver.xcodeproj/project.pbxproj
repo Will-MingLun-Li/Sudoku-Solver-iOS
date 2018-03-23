@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		BE221CDE2051D35500CC4BCB /* BacktrackAlgorithm.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE221CDD2051D35500CC4BCB /* BacktrackAlgorithm.swift */; };
+		BE87C3662063F28C00E8A8DC /* ImageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE87C3652063F28C00E8A8DC /* ImageViewController.swift */; };
 		BEF3EA7E20361F7A00299E5E /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = BEF3EA7D20361F7A00299E5E /* AppDelegate.swift */; };
 		BEF3EA8020361F7A00299E5E /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BEF3EA7F20361F7A00299E5E /* ViewController.swift */; };
 		BEF3EA8320361F7A00299E5E /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = BEF3EA8120361F7A00299E5E /* Main.storyboard */; };
@@ -18,6 +19,7 @@
 
 /* Begin PBXFileReference section */
 		BE221CDD2051D35500CC4BCB /* BacktrackAlgorithm.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BacktrackAlgorithm.swift; sourceTree = "<group>"; };
+		BE87C3652063F28C00E8A8DC /* ImageViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageViewController.swift; sourceTree = "<group>"; };
 		BEF3EA7A20361F7A00299E5E /* SudokuSolver.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SudokuSolver.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		BEF3EA7D20361F7A00299E5E /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		BEF3EA7F20361F7A00299E5E /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -60,12 +62,13 @@
 			children = (
 				BEF3EA7D20361F7A00299E5E /* AppDelegate.swift */,
 				BEF3EA7F20361F7A00299E5E /* ViewController.swift */,
+				BEF3EA8F203F40A700299E5E /* cameraBuffer.swift */,
+				BE221CDD2051D35500CC4BCB /* BacktrackAlgorithm.swift */,
+				BE87C3652063F28C00E8A8DC /* ImageViewController.swift */,
 				BEF3EA8120361F7A00299E5E /* Main.storyboard */,
 				BEF3EA8420361F7A00299E5E /* Assets.xcassets */,
 				BEF3EA8620361F7A00299E5E /* LaunchScreen.storyboard */,
 				BEF3EA8920361F7A00299E5E /* Info.plist */,
-				BEF3EA8F203F40A700299E5E /* cameraBuffer.swift */,
-				BE221CDD2051D35500CC4BCB /* BacktrackAlgorithm.swift */,
 			);
 			path = SudokuSolver;
 			sourceTree = "<group>";
@@ -145,6 +148,7 @@
 				BE221CDE2051D35500CC4BCB /* BacktrackAlgorithm.swift in Sources */,
 				BEF3EA90203F40A700299E5E /* cameraBuffer.swift in Sources */,
 				BEF3EA8020361F7A00299E5E /* ViewController.swift in Sources */,
+				BE87C3662063F28C00E8A8DC /* ImageViewController.swift in Sources */,
 				BEF3EA7E20361F7A00299E5E /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

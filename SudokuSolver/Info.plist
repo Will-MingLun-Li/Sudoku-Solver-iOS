@@ -6,6 +6,8 @@
 	<string>Access to photo album</string>
 	<key>NSPhotoLibraryAddUsageDescription</key>
 	<string>Saving photo to album</string>
+	<key>NSCameraUsageDescription</key>
+	<string>To scan and retrieve image for the application</string>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
 	<key>CFBundleExecutable</key>
@@ -24,8 +26,6 @@
 	<string>1</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
-	<key>NSCameraUsageDescription</key>
-	<string>To scan and retrieve image for the application</string>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
 	<key>UIMainStoryboardFile</key>
