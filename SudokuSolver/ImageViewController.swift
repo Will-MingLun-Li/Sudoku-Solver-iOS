@@ -9,57 +9,39 @@
 import UIKit
 import Vision
 
-class ImageViewController: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
+class ImageViewController: UIViewController {
     
     // MARK: Properties
     @IBOutlet weak var analyzedImageView: UIImageView!
-    @IBOutlet weak var backToCamera: UIButton!
-    
-    @IBAction func choosePhoto(_ sender: UIButton) {
-        let picker = UIImagePickerController()
-        picker.delegate = self
-        picker.sourceType = .photoLibrary
-        present(picker, animated: true)
+    @IBAction func goBack(_ sender: Any) {
+        self.dismiss(animated: true, completion: nil)
     }
     
-    var originalImage : UIImage!
+    var originalImage : UIImage?
     var imageToAnalyze : CIImage?
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        
+        if let availableImage = originalImage {
+            analyzedImageView.image = availableImage
+        }
+    }
     
     lazy var rectangleBoxRequest: VNDetectRectanglesRequest = {
         return VNDetectRectanglesRequest(completionHandler: self.handleRectangles)
     }()
     
     // MARK: Methods
-//    func imageController(originalImg: UIImage) {
-//        analyzedImageView.image = originalImg
-//
-//        self.originalImage = originalImg
-//        let uiImage = originalImg
-//        guard let ciImage = CIImage(image: uiImage) else { fatalError("can't create CIImage from UIImage") }
-//
-//        let handler = VNImageRequestHandler(ciImage: ciImage, orientation: CGImagePropertyOrientation(rawValue: UInt32(Int32(uiImage.imageOrientation.rawValue)))!)
-//
-//        DispatchQueue.global(qos: .userInteractive).async {
-//            do {
-//                try handler.perform([self.rectangleBoxRequest])
-//            } catch {
-//                print(error)
-//            }
-//        }
-//    }
-    override func viewDidLoad() {
-        super.viewDidLoad()
-    }
-    
-    @objc func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
-        picker.dismiss(animated: true)
-        
-        guard let uiImage = info[UIImagePickerControllerOriginalImage] as? UIImage else { fatalError("no image from image picker") }
-        originalImage = uiImage
+    func imageController(originalImg: UIImage) {
+        analyzedImageView.image = originalImg
+
+        self.originalImage = originalImg
+        let uiImage = originalImg
         guard let ciImage = CIImage(image: uiImage) else { fatalError("can't create CIImage from UIImage") }
-        
+
         let handler = VNImageRequestHandler(ciImage: ciImage, orientation: CGImagePropertyOrientation(rawValue: UInt32(Int32(uiImage.imageOrientation.rawValue)))!)
-        
+
         DispatchQueue.global(qos: .userInteractive).async {
             do {
                 try handler.perform([self.rectangleBoxRequest])

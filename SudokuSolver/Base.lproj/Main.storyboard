@@ -28,15 +28,7 @@
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <state key="normal" title="Button"/>
                                 <connections>
-                                    <segue destination="BYZ-38-t0r" kind="show" id="uXg-GZ-cRB"/>
-                                </connections>
-                            </button>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="F64-HK-MtV">
-                                <rect key="frame" x="164" y="617" width="46" height="30"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <state key="normal" title="Button"/>
-                                <connections>
-                                    <action selector="choosePhoto:" destination="dSH-Ty-dSA" eventType="touchUpInside" id="1HO-3v-YsZ"/>
+                                    <action selector="goBack:" destination="dSH-Ty-dSA" eventType="touchUpInside" id="y1L-24-h5d"/>
                                 </connections>
                             </button>
                         </subviews>
@@ -45,7 +37,6 @@
                     </view>
                     <connections>
                         <outlet property="analyzedImageView" destination="iUn-eU-Wtg" id="VdZ-QB-hcZ"/>
-                        <outlet property="backToCamera" destination="zhQ-zF-Yij" id="rL2-20-2NO"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="D7Z-U7-K8g" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -60,22 +51,18 @@
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="ntM-9s-7R6">
-                                <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                            </imageView>
                             <button contentMode="scaleToFill" semanticContentAttribute="spatial" highlighted="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="qpl-2b-AQ8">
                                 <rect key="frame" x="150" y="572" width="75" height="75"/>
                                 <color key="backgroundColor" cocoaTouchSystemColor="lightTextColor"/>
+                                <accessibility key="accessibilityConfiguration">
+                                    <accessibilityTraits key="traits" button="YES" image="YES"/>
+                                </accessibility>
                                 <constraints>
                                     <constraint firstAttribute="width" secondItem="qpl-2b-AQ8" secondAttribute="height" multiplier="1:1" id="RWX-NM-KI7"/>
                                 </constraints>
                                 <state key="normal" image="Camera"/>
                                 <connections>
                                     <action selector="takePictureOnTap:" destination="BYZ-38-t0r" eventType="touchUpInside" id="u19-gJ-Oyw"/>
-                                    <segue destination="dSH-Ty-dSA" kind="popoverPresentation" popoverAnchorView="qpl-2b-AQ8" id="8Bu-Ze-g2x">
-                                        <popoverArrowDirection key="popoverArrowDirection" up="YES" down="YES" left="YES" right="YES"/>
-                                    </segue>
                                 </connections>
                             </button>
                         </subviews>
@@ -88,13 +75,12 @@
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                     </view>
                     <connections>
-                        <outlet property="imgView" destination="ntM-9s-7R6" id="vVe-gG-mBY"/>
                         <outlet property="picButton" destination="qpl-2b-AQ8" id="hNb-dd-ei3"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-1463" y="62"/>
+            <point key="canvasLocation" x="-1463.2" y="61.619190404797607"/>
         </scene>
     </scenes>
     <resources>

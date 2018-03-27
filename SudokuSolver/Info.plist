@@ -2,8 +2,6 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-	<key>NSPhotoLibraryUsageDescription</key>
-	<string>Access to photo album</string>
 	<key>NSPhotoLibraryAddUsageDescription</key>
 	<string>Saving photo to album</string>
 	<key>NSCameraUsageDescription</key>

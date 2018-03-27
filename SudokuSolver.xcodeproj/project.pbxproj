@@ -14,7 +14,6 @@
 		BEF3EA8320361F7A00299E5E /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = BEF3EA8120361F7A00299E5E /* Main.storyboard */; };
 		BEF3EA8520361F7A00299E5E /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = BEF3EA8420361F7A00299E5E /* Assets.xcassets */; };
 		BEF3EA8820361F7A00299E5E /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = BEF3EA8620361F7A00299E5E /* LaunchScreen.storyboard */; };
-		BEF3EA90203F40A700299E5E /* cameraBuffer.swift in Sources */ = {isa = PBXBuildFile; fileRef = BEF3EA8F203F40A700299E5E /* cameraBuffer.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -27,7 +26,6 @@
 		BEF3EA8420361F7A00299E5E /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		BEF3EA8720361F7A00299E5E /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		BEF3EA8920361F7A00299E5E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		BEF3EA8F203F40A700299E5E /* cameraBuffer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = cameraBuffer.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -62,9 +60,8 @@
 			children = (
 				BEF3EA7D20361F7A00299E5E /* AppDelegate.swift */,
 				BEF3EA7F20361F7A00299E5E /* ViewController.swift */,
-				BEF3EA8F203F40A700299E5E /* cameraBuffer.swift */,
-				BE221CDD2051D35500CC4BCB /* BacktrackAlgorithm.swift */,
 				BE87C3652063F28C00E8A8DC /* ImageViewController.swift */,
+				BE221CDD2051D35500CC4BCB /* BacktrackAlgorithm.swift */,
 				BEF3EA8120361F7A00299E5E /* Main.storyboard */,
 				BEF3EA8420361F7A00299E5E /* Assets.xcassets */,
 				BEF3EA8620361F7A00299E5E /* LaunchScreen.storyboard */,
@@ -146,7 +143,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				BE221CDE2051D35500CC4BCB /* BacktrackAlgorithm.swift in Sources */,
-				BEF3EA90203F40A700299E5E /* cameraBuffer.swift in Sources */,
 				BEF3EA8020361F7A00299E5E /* ViewController.swift in Sources */,
 				BE87C3662063F28C00E8A8DC /* ImageViewController.swift in Sources */,
 				BEF3EA7E20361F7A00299E5E /* AppDelegate.swift in Sources */,

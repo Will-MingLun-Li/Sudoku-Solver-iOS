@@ -9,22 +9,23 @@
 import UIKit
 import AVFoundation
 
-class ViewController: UIViewController, CameraBufferDelegate {
+class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDelegate {
 
-    @IBOutlet weak var imgView: UIImageView!
     @IBOutlet weak var picButton: UIButton!
     
-    var camBuffer: CameraBuffer!
     var solveSudoku: SudokuClass!
+    
+    let captureSession = AVCaptureSession()
+    var previewLayer : CALayer!
+    var captureDevice : AVCaptureDevice!
+    
+    var takePhoto = false
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
         picButton.layer.cornerRadius = picButton.frame.size.width / 2
         picButton.clipsToBounds = true
-        
-        camBuffer = CameraBuffer()
-        camBuffer.delegate = self
         
         solveSudoku = SudokuClass()
         
@@ -53,24 +54,86 @@ class ViewController: UIViewController, CameraBufferDelegate {
         } */
     }
     
-    func captured(image: UIImage) {
-        // Setting up camera view
-        imgView.image = image
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        prepareCamera()
     }
     
+    func prepareCamera() {
+        captureDevice = AVCaptureDevice.default(for: AVMediaType.video)
+        
+        do {
+            let captureDeviceInput = try AVCaptureDeviceInput(device: captureDevice)
+            captureSession.addInput(captureDeviceInput)
+        } catch {
+            print(error.localizedDescription)
+        }
+        
+        let layer = AVCaptureVideoPreviewLayer(session: captureSession)
+        self.previewLayer = layer
+        self.view.layer.addSublayer(self.previewLayer)
+        self.view.bringSubview(toFront: picButton)
+        self.previewLayer.frame = self.view.layer.frame
+        captureSession.startRunning()
+    
+        let dataOutput = AVCaptureVideoDataOutput()
+        dataOutput.videoSettings = [((kCVPixelBufferPixelFormatTypeKey as NSString) as String):NSNumber(value:kCVPixelFormatType_32BGRA)]
+    
+        dataOutput.alwaysDiscardsLateVideoFrames = true
+    
+        if captureSession.canAddOutput(dataOutput) {
+            captureSession.addOutput(dataOutput)
+        }
+    
+        captureSession.commitConfiguration()
+    
+        let queue = DispatchQueue(label: "session queue")
+        dataOutput.setSampleBufferDelegate(self as AVCaptureVideoDataOutputSampleBufferDelegate, queue: queue)
+    }
+
     @IBAction func takePictureOnTap(_ sender: Any) {
-        // Make sure capturePhotoOutput is valid
-        guard let capturePhotoOutput = camBuffer.capPhotoOutput else { return }
+        takePhoto = true
+    }
+    
+    func captureOutput(_ output: AVCaptureOutput, didOutput sampleBuffer: CMSampleBuffer, from connection: AVCaptureConnection) {
+        if takePhoto {
+            takePhoto = false
+            
+            if let image = self.getImageFromSampleBuffer(buffer: sampleBuffer) {
+                let photoVC = UIStoryboard.init(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "ImageViewController") as! ImageViewController
+                photoVC.originalImage = image
+                
+                DispatchQueue.main.async {
+                    self.present(photoVC, animated: true, completion: {
+                        self.stopCaptureSession()
+                    })
+                }
+            }
+        }
+    }
+    
+    func getImageFromSampleBuffer(buffer: CMSampleBuffer) -> UIImage? {
+        if let pixelBuffer = CMSampleBufferGetImageBuffer(buffer) {
+            let ciImage = CIImage(cvPixelBuffer: pixelBuffer)
+            let context = CIContext()
+            
+            let imageRect = CGRect(x: 0, y: 0, width: CVPixelBufferGetWidth(pixelBuffer), height: CVPixelBufferGetHeight(pixelBuffer))
+            
+            if let image = context.createCGImage(ciImage, from: imageRect) {
+                return UIImage(cgImage: image, scale: UIScreen.main.scale, orientation: .right)
+            }
+        }
         
-        // Get an instance of AVCapturePhotoSettings class
-        let photoSettings = AVCapturePhotoSettings()
+        return nil
+    }
+    
+    func stopCaptureSession() {
+        self.captureSession.stopRunning()
         
-        // Set photo settings for our need
-        photoSettings.isAutoStillImageStabilizationEnabled = true
-        photoSettings.isHighResolutionPhotoEnabled = true
-        photoSettings.flashMode = .off
-        
-        // Call capturePhoto method by passing our photo settings and a delegate implementing AVCapturePhotoCaptureDelegate
-        capturePhotoOutput.capturePhoto(with: photoSettings, delegate: camBuffer)
+        if let inputs = captureSession.inputs as? [AVCaptureDeviceInput] {
+            for input in inputs {
+                self.captureSession.removeInput(input)
+            }
+        }
     }
 }
