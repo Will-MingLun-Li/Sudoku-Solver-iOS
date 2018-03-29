@@ -18,29 +18,31 @@ class ImageViewController: UIViewController {
     }
     
     var originalImage : UIImage?
-    var imageToAnalyze : CIImage?
+    //var noirImage : UIImage?
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
         if let availableImage = originalImage {
+            //noirImage = availableImage.noir
             analyzedImageView.image = availableImage
+            imageController(originalImg: availableImage)
         }
     }
     
     lazy var rectangleBoxRequest: VNDetectRectanglesRequest = {
-        return VNDetectRectanglesRequest(completionHandler: self.handleRectangles)
+        let rectRequest = VNDetectRectanglesRequest(completionHandler: self.handleRectangles)
+        rectRequest.minimumAspectRatio = 0.1
+        rectRequest.maximumObservations = 9
+        return rectRequest
     }()
-    
+
     // MARK: Methods
     func imageController(originalImg: UIImage) {
-        analyzedImageView.image = originalImg
-
-        self.originalImage = originalImg
         let uiImage = originalImg
         guard let ciImage = CIImage(image: uiImage) else { fatalError("can't create CIImage from UIImage") }
 
-        let handler = VNImageRequestHandler(ciImage: ciImage, orientation: CGImagePropertyOrientation(rawValue: UInt32(Int32(uiImage.imageOrientation.rawValue)))!)
+        let handler = VNImageRequestHandler(ciImage: ciImage, orientation: .right)
 
         DispatchQueue.global(qos: .userInteractive).async {
             do {
@@ -50,19 +52,18 @@ class ImageViewController: UIViewController {
             }
         }
     }
-    
+
     func transformRect(fromRect: CGRect , toViewRect :UIView) -> CGRect {
-        
         var toRect = CGRect()
         toRect.size.width = fromRect.size.width * toViewRect.frame.size.width
         toRect.size.height = fromRect.size.height * toViewRect.frame.size.height
         toRect.origin.y =  (toViewRect.frame.height) - (toViewRect.frame.height * fromRect.origin.y )
         toRect.origin.y  = toRect.origin.y -  toRect.size.height
         toRect.origin.x =  fromRect.origin.x * toViewRect.frame.size.width
-        
+
         return toRect
     }
-    
+
     func CreateBoxView(withColor : UIColor) -> UIView {
         let view = UIView()
         view.layer.borderColor = withColor.cgColor
@@ -70,27 +71,40 @@ class ImageViewController: UIViewController {
         view.backgroundColor = UIColor.clear
         return view
     }
-    
+
     func handleRectangles(request: VNRequest, error: Error?) {
-        guard let observations = request.results as? [VNRectangleObservation]
-            else { print("unexpected result type from VNDetectRectanglesRequest")
-                return
+        guard let observations = request.results as? [VNRectangleObservation] else {
+            print("unexpected result type from VNDetectRectanglesRequest")
+            return
         }
         guard observations.first != nil else {
             return
         }
-        print(self.analyzedImageView)
         // Show the pre-processed image
         DispatchQueue.main.async {
-            for rect in observations
-            {
+            self.analyzedImageView.subviews.forEach({ (s) in
+                s.removeFromSuperview()
+            })
+            for rect in observations {
                 let view = self.CreateBoxView(withColor: UIColor.cyan)
                 view.frame = self.transformRect(fromRect: rect.boundingBox, toViewRect: self.analyzedImageView)
                 self.analyzedImageView.image = self.originalImage
                 self.analyzedImageView.addSubview(view)
-                self.analyzedImageView.isHidden = false
             }
         }
     }
 
+}
+
+extension UIImage {
+    var noir: UIImage? {
+        let context = CIContext(options: nil)
+        guard let currentFilter = CIFilter(name: "CIColorInvert") else { return nil }
+        currentFilter.setValue(CIImage(image: self), forKey: kCIInputImageKey)
+        if let output = currentFilter.outputImage,
+            let cgImage = context.createCGImage(output, from: output.extent) {
+            return UIImage(cgImage: cgImage, scale: scale, orientation: imageOrientation)
+        }
+        return nil
+    }
 }
