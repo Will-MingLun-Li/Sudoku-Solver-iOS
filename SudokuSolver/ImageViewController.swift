@@ -8,6 +8,7 @@
 
 import UIKit
 import Vision
+import GPUImage
 
 class ImageViewController: UIViewController {
     
@@ -18,22 +19,28 @@ class ImageViewController: UIViewController {
     }
     
     var originalImage : UIImage?
-    //var noirImage : UIImage?
+    var noirImage : UIImage?
+    var thresholdImage : UIImage?
+    
+    let threshold = AdaptiveThreshold()
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
         if let availableImage = originalImage {
-            //noirImage = availableImage.noir
-            analyzedImageView.image = availableImage
-            imageController(originalImg: availableImage)
+            threshold.blurRadiusInPixels = 5000
+            noirImage = availableImage.noir?.filterWithOperation(threshold)
+            thresholdImage = UIImage(cgImage: (noirImage?.cgImage!)!, scale: (noirImage?.scale)!, orientation: .right)
+            
+            analyzedImageView.image = thresholdImage
+            imageController(originalImg: thresholdImage!)
         }
     }
     
     lazy var rectangleBoxRequest: VNDetectRectanglesRequest = {
         let rectRequest = VNDetectRectanglesRequest(completionHandler: self.handleRectangles)
         rectRequest.minimumAspectRatio = 0.1
-        rectRequest.maximumObservations = 9
+        rectRequest.maximumObservations = 0
         return rectRequest
     }()
 
@@ -80,6 +87,7 @@ class ImageViewController: UIViewController {
         guard observations.first != nil else {
             return
         }
+        print(observations.count)
         // Show the pre-processed image
         DispatchQueue.main.async {
             self.analyzedImageView.subviews.forEach({ (s) in
@@ -88,7 +96,7 @@ class ImageViewController: UIViewController {
             for rect in observations {
                 let view = self.CreateBoxView(withColor: UIColor.cyan)
                 view.frame = self.transformRect(fromRect: rect.boundingBox, toViewRect: self.analyzedImageView)
-                self.analyzedImageView.image = self.originalImage
+                self.analyzedImageView.image = self.thresholdImage
                 self.analyzedImageView.addSubview(view)
             }
         }
@@ -99,11 +107,12 @@ class ImageViewController: UIViewController {
 extension UIImage {
     var noir: UIImage? {
         let context = CIContext(options: nil)
-        guard let currentFilter = CIFilter(name: "CIColorInvert") else { return nil }
+
+        guard let currentFilter = CIFilter(name: "CIPhotoEffectNoir") else { return nil }
         currentFilter.setValue(CIImage(image: self), forKey: kCIInputImageKey)
         if let output = currentFilter.outputImage,
             let cgImage = context.createCGImage(output, from: output.extent) {
-            return UIImage(cgImage: cgImage, scale: scale, orientation: imageOrientation)
+            return UIImage(cgImage: cgImage, scale: scale, orientation: .right)
         }
         return nil
     }
