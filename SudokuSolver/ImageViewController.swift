@@ -28,18 +28,19 @@ class ImageViewController: UIViewController {
         super.viewDidLoad()
         
         if let availableImage = originalImage {
-            threshold.blurRadiusInPixels = 5000
-            noirImage = availableImage.noir?.filterWithOperation(threshold)
+            threshold.blurRadiusInPixels = 4
+            noirImage = availableImage.noir?.filterWithPipeline{input, output in
+                input --> threshold --> ColorInversion() --> output
+            }
             thresholdImage = UIImage(cgImage: (noirImage?.cgImage!)!, scale: (noirImage?.scale)!, orientation: .right)
-            
-            analyzedImageView.image = thresholdImage
+        
             imageController(originalImg: thresholdImage!)
         }
     }
     
     lazy var rectangleBoxRequest: VNDetectRectanglesRequest = {
         let rectRequest = VNDetectRectanglesRequest(completionHandler: self.handleRectangles)
-        rectRequest.minimumAspectRatio = 0.1
+        rectRequest.minimumAspectRatio = 0.3
         rectRequest.maximumObservations = 0
         return rectRequest
     }()
@@ -87,7 +88,7 @@ class ImageViewController: UIViewController {
         guard observations.first != nil else {
             return
         }
-        print(observations.count)
+
         // Show the pre-processed image
         DispatchQueue.main.async {
             self.analyzedImageView.subviews.forEach({ (s) in
