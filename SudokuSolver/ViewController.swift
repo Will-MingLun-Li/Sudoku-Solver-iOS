@@ -12,6 +12,7 @@ import AVFoundation
 class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDelegate {
 
     @IBOutlet weak var picButton: UIButton!
+    @IBOutlet weak var scannerImg: UIImageView!
     
     var solveSudoku: SudokuClass!
     
@@ -73,6 +74,7 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
         self.previewLayer = layer
         self.view.layer.addSublayer(self.previewLayer)
         self.view.bringSubview(toFront: picButton)
+        self.view.bringSubview(toFront: scannerImg)
         self.previewLayer.frame = self.view.layer.frame
         captureSession.startRunning()
     

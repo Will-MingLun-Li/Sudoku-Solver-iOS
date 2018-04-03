@@ -23,6 +23,8 @@ class ImageViewController: UIViewController {
     var thresholdImage : UIImage?
     
     let threshold = AdaptiveThreshold()
+    let inversion = ColorInversion()
+    let size = CGSize(width: 28, height: 28)
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -30,78 +32,94 @@ class ImageViewController: UIViewController {
         if let availableImage = originalImage {
             threshold.blurRadiusInPixels = 4
             noirImage = availableImage.noir?.filterWithPipeline{input, output in
-                input --> threshold --> ColorInversion() --> output
+                input --> threshold --> inversion --> output
             }
             thresholdImage = UIImage(cgImage: (noirImage?.cgImage!)!, scale: (noirImage?.scale)!, orientation: .right)
         
-            imageController(originalImg: thresholdImage!)
+            //imageController(originalImg: thresholdImage!)
         }
     }
     
-    lazy var rectangleBoxRequest: VNDetectRectanglesRequest = {
-        let rectRequest = VNDetectRectanglesRequest(completionHandler: self.handleRectangles)
-        rectRequest.minimumAspectRatio = 0.3
-        rectRequest.maximumObservations = 0
-        return rectRequest
-    }()
-
-    // MARK: Methods
-    func imageController(originalImg: UIImage) {
-        let uiImage = originalImg
-        guard let ciImage = CIImage(image: uiImage) else { fatalError("can't create CIImage from UIImage") }
-
-        let handler = VNImageRequestHandler(ciImage: ciImage, orientation: .right)
-
-        DispatchQueue.global(qos: .userInteractive).async {
-            do {
-                try handler.perform([self.rectangleBoxRequest])
-            } catch {
-                print(error)
-            }
-        }
-    }
-
-    func transformRect(fromRect: CGRect , toViewRect :UIView) -> CGRect {
+    func sudokuController() {
         var toRect = CGRect()
-        toRect.size.width = fromRect.size.width * toViewRect.frame.size.width
-        toRect.size.height = fromRect.size.height * toViewRect.frame.size.height
-        toRect.origin.y =  (toViewRect.frame.height) - (toViewRect.frame.height * fromRect.origin.y )
-        toRect.origin.y  = toRect.origin.y -  toRect.size.height
-        toRect.origin.x =  fromRect.origin.x * toViewRect.frame.size.width
-
-        return toRect
+        
+        toRect.size = CGSize(width: 715.0, height: 715.0)
+        toRect.origin = CGPoint(x: 455.0, y: 180.0)
+        
+        let croppedCGImage = (thresholdImage!.cgImage?.cropping(to: toRect))!
+        let croppedImage = UIImage(cgImage: croppedCGImage, scale: 1.0, orientation: .right)
+        
+        analyzedImageView.image = croppedImage
     }
 
-    func CreateBoxView(withColor : UIColor) -> UIView {
-        let view = UIView()
-        view.layer.borderColor = withColor.cgColor
-        view.layer.borderWidth = 2
-        view.backgroundColor = UIColor.clear
-        return view
-    }
+    
+// The commented out code are for Swift's Vision library, for some reason the size for CG image and CGRect doesn't align, so going for an easier solution for now
 
-    func handleRectangles(request: VNRequest, error: Error?) {
-        guard let observations = request.results as? [VNRectangleObservation] else {
-            print("unexpected result type from VNDetectRectanglesRequest")
-            return
-        }
-        guard observations.first != nil else {
-            return
-        }
-
-        // Show the pre-processed image
-        DispatchQueue.main.async {
-            self.analyzedImageView.subviews.forEach({ (s) in
-                s.removeFromSuperview()
-            })
-            for rect in observations {
-                let view = self.CreateBoxView(withColor: UIColor.cyan)
-                view.frame = self.transformRect(fromRect: rect.boundingBox, toViewRect: self.analyzedImageView)
-                self.analyzedImageView.image = self.thresholdImage
-                self.analyzedImageView.addSubview(view)
-            }
-        }
-    }
+//    lazy var rectangleBoxRequest: VNDetectRectanglesRequest = {
+//        let rectRequest = VNDetectRectanglesRequest(completionHandler: self.handleRectangles)
+//        rectRequest.minimumAspectRatio = 0.3
+//        rectRequest.maximumObservations = 0
+//        return rectRequest
+//    }()
+//
+//    // MARK: Methods
+//    func imageController(originalImg: UIImage) {
+//        let uiImage = originalImg
+//        guard let ciImage = CIImage(image: uiImage) else { fatalError("can't create CIImage from UIImage") }
+//
+//        let handler = VNImageRequestHandler(ciImage: ciImage, orientation: .right)
+//
+//        DispatchQueue.global(qos: .userInteractive).async {
+//            do {
+//                try handler.perform([self.rectangleBoxRequest])
+//            } catch {
+//                print(error)
+//            }
+//        }
+//    }
+//
+//    func transformRect(fromRect: CGRect , toViewRect :UIView) -> CGRect {
+//        var toRect = CGRect()
+//        toRect.size.width = fromRect.size.width * toViewRect.frame.size.width
+//        toRect.size.height = fromRect.size.height * toViewRect.frame.size.height
+//        toRect.origin.y =  (toViewRect.frame.height) - (toViewRect.frame.height * fromRect.origin.y)
+//        toRect.origin.y  = toRect.origin.y - toRect.size.height
+//        toRect.origin.x =  fromRect.origin.x * toViewRect.frame.size.width
+//
+//        return toRect
+//    }
+//
+//    func CreateBoxView(withColor : UIColor) -> UIView {
+//        let view = UIView()
+//        view.layer.borderColor = withColor.cgColor
+//        view.layer.borderWidth = 2
+//        view.backgroundColor = UIColor.clear
+//        return view
+//    }
+//
+//    func handleRectangles(request: VNRequest, error: Error?) {
+//        guard let observations = request.results as? [VNRectangleObservation] else {
+//            print("unexpected result type from VNDetectRectanglesRequest")
+//            return
+//        }
+//        guard observations.first != nil else {
+//            return
+//        }
+//
+//        // Show the pre-processed image
+//        DispatchQueue.main.async {
+//            self.analyzedImageView.subviews.forEach({ (s) in
+//                s.removeFromSuperview()
+//            })
+//            for rect in observations {
+//                let view = self.CreateBoxView(withColor: UIColor.cyan)
+//                view.frame = self.transformRect(fromRect: rect.boundingBox, toViewRect: self.analyzedImageView)
+//
+//                self.analyzedImageView.image = self.thresholdImage
+//                self.analyzedImageView.addSubview(view)
+//            }
+//        }
+//    }
 
 }
 
