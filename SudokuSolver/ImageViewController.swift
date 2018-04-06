@@ -22,12 +22,18 @@ class ImageViewController: UIViewController {
     var noirImage : UIImage?
     var thresholdImage : UIImage?
     
+    // MARK: Class
+    var sudokuClass : SudokuClass!
+    var sudokuBoard : SudokuClass.SudokuBoard = [[SudokuClass.Square]](repeating: [SudokuClass.Square](repeating: 0, count: 9), count: 9)
+    
     let threshold = AdaptiveThreshold()
     let inversion = ColorInversion()
     let size = CGSize(width: 28, height: 28)
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        sudokuClass = SudokuClass()
         
         if let availableImage = originalImage {
             threshold.blurRadiusInPixels = 4
@@ -36,6 +42,7 @@ class ImageViewController: UIViewController {
             }
             thresholdImage = UIImage(cgImage: (noirImage?.cgImage!)!, scale: (noirImage?.scale)!, orientation: .right)
         
+            sudokuController()
             //imageController(originalImg: thresholdImage!)
         }
     }
@@ -47,9 +54,40 @@ class ImageViewController: UIViewController {
         toRect.origin = CGPoint(x: 455.0, y: 180.0)
         
         let croppedCGImage = (thresholdImage!.cgImage?.cropping(to: toRect))!
+        sudokuSquares(image: croppedCGImage)
         let croppedImage = UIImage(cgImage: croppedCGImage, scale: 1.0, orientation: .right)
         
         analyzedImageView.image = croppedImage
+    }
+    
+    func sudokuSquares(image: CGImage) {
+        var toRect = CGRect()
+        toRect.size = CGSize(width: 70, height: 70)
+        
+        for xPoint in 0..<9 {
+            for yPoint in (0..<9).reversed() {
+                toRect.origin = CGPoint(x: (CGFloat(xPoint) * 80.0) + 8.0, y: (CGFloat(yPoint) * 80.0) + 5.0)
+                
+                let CGSquare = (image.cropping(to: toRect))!
+                var confidenceFlag = false
+                guard let square = UIImage(cgImage: CGSquare, scale: 1.0, orientation: .right).resize(to: size) else { fatalError("Cannot retrieve square pieces") }
+                guard let result = try? mnistCNN().prediction(image: square.pixelBuffer()!) else { fatalError("Cannot identify square pieces") }
+                
+                for (_, confidence) in result.output {
+                    if (confidence > 0.6) {
+                        confidenceFlag = true
+                        break
+                    }
+                }
+                if (confidenceFlag == true) {
+                    sudokuBoard[xPoint][8 - yPoint] = SudokuClass.Square(integerLiteral: Int(result.classLabel)!)
+                } else {
+                    sudokuBoard[xPoint][8 - yPoint] = SudokuClass.Square(integerLiteral: 0)
+                }
+            
+                UIImageWriteToSavedPhotosAlbum(square, nil, nil, nil)
+            }
+        }
     }
 
     
