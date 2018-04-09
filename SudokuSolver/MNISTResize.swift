@@ -10,8 +10,8 @@ import UIKit
 
 extension UIImage {
     
+    // Resize the Image to be 28px by 28px since MNIST reads that the best
     func resize(to newSize: CGSize) -> UIImage? {
-        
         guard self.size != newSize else { return self }
         
         UIGraphicsBeginImageContextWithOptions(newSize, false, 0.0)
@@ -21,6 +21,7 @@ extension UIImage {
         return UIGraphicsGetImageFromCurrentImageContext()
     }
     
+    // Convert to a pixel buffer to read
     func pixelBuffer() -> CVPixelBuffer? {
         var pixelBuffer: CVPixelBuffer? = nil
         

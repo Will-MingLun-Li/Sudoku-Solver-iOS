@@ -18,6 +18,7 @@ class ImageViewController: UIViewController {
         self.dismiss(animated: true, completion: nil)
     }
     
+    // MARK: Image Variables
     var originalImage : UIImage?
     var noirImage : UIImage?
     var thresholdImage : UIImage?
@@ -26,6 +27,7 @@ class ImageViewController: UIViewController {
     var sudokuClass : SudokuClass!
     var sudokuBoard : SudokuClass.SudokuBoard = [[SudokuClass.Square]](repeating: [SudokuClass.Square](repeating: 0, count: 9), count: 9)
     
+    // MARK: Image Enhancement for Noise Cancellation
     let threshold = AdaptiveThreshold()
     let inversion = ColorInversion()
     let size = CGSize(width: 28, height: 28)
@@ -35,6 +37,7 @@ class ImageViewController: UIViewController {
         
         sudokuClass = SudokuClass()
         
+        // Applying Image Enhancements for easier MNIST reading
         if let availableImage = originalImage {
             threshold.blurRadiusInPixels = 4
             noirImage = availableImage.noir?.filterWithPipeline{input, output in
@@ -53,6 +56,7 @@ class ImageViewController: UIViewController {
         toRect.size = CGSize(width: 715.0, height: 715.0)
         toRect.origin = CGPoint(x: 455.0, y: 180.0)
         
+        // Cropping out the Sudoku Puzzle so we can use it to crop out the pieces easier
         let croppedCGImage = (thresholdImage!.cgImage?.cropping(to: toRect))!
         sudokuSquares(image: croppedCGImage)
         let croppedImage = UIImage(cgImage: croppedCGImage, scale: 1.0, orientation: .right)
@@ -64,6 +68,7 @@ class ImageViewController: UIViewController {
         var toRect = CGRect()
         toRect.size = CGSize(width: 70, height: 70)
         
+        // Crop out the individual pieces and populating out Board after reading them using MNIST
         for xPoint in 0..<9 {
             for yPoint in (0..<9).reversed() {
                 toRect.origin = CGPoint(x: (CGFloat(xPoint) * 80.0) + 8.0, y: (CGFloat(yPoint) * 80.0) + 5.0)
@@ -84,8 +89,6 @@ class ImageViewController: UIViewController {
                 } else {
                     sudokuBoard[xPoint][8 - yPoint] = SudokuClass.Square(integerLiteral: 0)
                 }
-            
-                UIImageWriteToSavedPhotosAlbum(square, nil, nil, nil)
             }
         }
     }
@@ -161,6 +164,7 @@ class ImageViewController: UIViewController {
 
 }
 
+// Convert the image to black and white
 extension UIImage {
     var noir: UIImage? {
         let context = CIContext(options: nil)

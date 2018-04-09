@@ -10,12 +10,15 @@ import UIKit
 import AVFoundation
 
 class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDelegate {
-
+    
+    // MARK: Outlets
     @IBOutlet weak var picButton: UIButton!
     @IBOutlet weak var scannerImg: UIImageView!
+    @IBOutlet weak var LoadingLabel: UIActivityIndicatorView!
     
     var solveSudoku: SudokuClass!
     
+    // MARK: Camera Session Variables
     let captureSession = AVCaptureSession()
     var previewLayer : CALayer!
     var captureDevice : AVCaptureDevice!
@@ -25,6 +28,7 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        // Modifying the picture button to make it circular
         picButton.layer.cornerRadius = picButton.frame.size.width / 2
         picButton.clipsToBounds = true
         
@@ -60,6 +64,7 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
         prepareCamera()
     }
     
+    // Prepare the camera, set up the config for the camera input
     func prepareCamera() {
         captureDevice = AVCaptureDevice.default(for: AVMediaType.video)
         
@@ -95,10 +100,14 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
 
     @IBAction func takePictureOnTap(_ sender: Any) {
         takePhoto = true
+        LoadingLabel.startAnimating()
+        view.addSubview(LoadingLabel)
     }
     
     func captureOutput(_ output: AVCaptureOutput, didOutput sampleBuffer: CMSampleBuffer, from connection: AVCaptureConnection) {
+        // Uses the takePhoto boolean value to determine when a photo can be taken
         if takePhoto {
+            // Reset takePhoto boolean and start the loading animation
             takePhoto = false
             
             if let image = self.getImageFromSampleBuffer(buffer: sampleBuffer) {
@@ -108,12 +117,14 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
                 DispatchQueue.main.async {
                     self.present(photoVC, animated: true, completion: {
                         self.stopCaptureSession()
+                        self.LoadingLabel.stopAnimating()
                     })
                 }
             }
         }
     }
     
+    // Retrieve the current buffer to get the image when the take picture button is pressed
     func getImageFromSampleBuffer(buffer: CMSampleBuffer) -> UIImage? {
         if let pixelBuffer = CMSampleBufferGetImageBuffer(buffer) {
             let ciImage = CIImage(cvPixelBuffer: pixelBuffer)
@@ -129,6 +140,7 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
         return nil
     }
     
+    // Stop the capturing session once a picture has already been taken
     func stopCaptureSession() {
         self.captureSession.stopRunning()
         
