@@ -10,18 +10,21 @@ import UIKit
 import Vision
 import GPUImage
 
-class ImageViewController: UIViewController {
+class ImageViewController: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource {
     
-    // MARK: Properties
-    @IBOutlet weak var analyzedImageView: UIImageView!
+    // MARK: Outlets
+    @IBOutlet weak var collectionView: UICollectionView!
     @IBAction func goBack(_ sender: Any) {
         self.dismiss(animated: true, completion: nil)
     }
     
-    // MARK: Image Variables
+    // MARK: Variables
     var originalImage : UIImage?
-    var noirImage : UIImage?
     var thresholdImage : UIImage?
+    
+    var screenSize : CGRect!
+    var screenWidth : CGFloat!
+    var screenHeight : CGFloat!
     
     // MARK: Class
     var sudokuClass : SudokuClass!
@@ -40,7 +43,7 @@ class ImageViewController: UIViewController {
         // Applying Image Enhancements for easier MNIST reading
         if let availableImage = originalImage {
             threshold.blurRadiusInPixels = 4
-            noirImage = availableImage.noir?.filterWithPipeline{input, output in
+            let noirImage = availableImage.noir?.filterWithPipeline{input, output in
                 input --> threshold --> inversion --> output
             }
             thresholdImage = UIImage(cgImage: (noirImage?.cgImage!)!, scale: (noirImage?.scale)!, orientation: .right)
@@ -48,32 +51,97 @@ class ImageViewController: UIViewController {
             sudokuController()
             //imageController(originalImg: thresholdImage!)
         }
+        
+        // Configuration to set up the Sudoku Board grid
+        screenSize = self.view.frame
+        screenWidth = screenSize.width
+        screenHeight = screenSize.height
+        
+        let topInset = (collectionView.frame.size.height - screenWidth) / 2
+        let layout = UICollectionViewFlowLayout()
+        layout.sectionInset = UIEdgeInsets(top: topInset, left: 0, bottom: 0, right: 0)
+        layout.itemSize = CGSize(width: screenWidth / 9, height: screenWidth / 9)
+        layout.minimumInteritemSpacing = 0
+        layout.minimumLineSpacing = 0
+        
+        collectionView.setCollectionViewLayout(layout, animated: false)
+        
+        // Add frames for the puzzle
+        for row in 0...2 {
+            for col in 0...2 {
+                let layer = CALayer()
+                let x = CGFloat(col) * screenWidth / 3
+                let y = CGFloat(row) * screenWidth / 3 + topInset
+                layer.frame = CGRect(x: x, y: y, width: screenWidth / 3, height: screenWidth / 3)
+                layer.borderWidth = 1.5
+                collectionView.layer.addSublayer(layer)
+            }
+        }
+        let layer = CALayer()
+        layer.frame = CGRect(x: 0, y: topInset, width: screenWidth, height: screenWidth)
+        layer.borderWidth = 3
+        collectionView.layer.addSublayer(layer)
+        
+        registerForKeyboardNotifications()
     }
     
+    override func viewDidDisappear(_ animated: Bool) {
+        deregisterFromKeyboardNotifications()
+    }
+    
+    func numberOfSectionsInCollectionView(collectionView: UICollectionView) -> Int {
+        return 1
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        return 81
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        return CGSize(width: screenWidth / 9, height: screenWidth / 9);
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "cell", for: indexPath) as! CollectionViewCell
+        cell.number.tag = indexPath.row
+
+        cell.number.textColor = UIColor.black
+//        if (color[indexPath.row]) {
+//            cell.number.textColor = UIColor.blue
+//        } else {
+//            cell.number.textColor = UIColor.black
+//        }
+
+        cell.number.text = String(0)
+//        let digit = puzzle[indexPath.row]
+//        if digit != -1 {
+//            cell.digit.text = String(digit)
+//        }
+
+        cell.layer.borderColor = UIColor.gray.cgColor
+        cell.layer.borderWidth = 1
+
+        return cell
+    }
+    
+    // Populate the 2D array with MNIST Readings
     func sudokuController() {
         var toRect = CGRect()
-        
         toRect.size = CGSize(width: 715.0, height: 715.0)
         toRect.origin = CGPoint(x: 455.0, y: 180.0)
         
         // Cropping out the Sudoku Puzzle so we can use it to crop out the pieces easier
         let croppedCGImage = (thresholdImage!.cgImage?.cropping(to: toRect))!
-        sudokuSquares(image: croppedCGImage)
-        let croppedImage = UIImage(cgImage: croppedCGImage, scale: 1.0, orientation: .right)
         
-        analyzedImageView.image = croppedImage
-    }
-    
-    func sudokuSquares(image: CGImage) {
-        var toRect = CGRect()
-        toRect.size = CGSize(width: 70, height: 70)
+        var piece = CGRect()
+        piece.size = CGSize(width: 70, height: 70)
         
         // Crop out the individual pieces and populating out Board after reading them using MNIST
         for xPoint in 0..<9 {
             for yPoint in (0..<9).reversed() {
-                toRect.origin = CGPoint(x: (CGFloat(xPoint) * 80.0) + 8.0, y: (CGFloat(yPoint) * 80.0) + 5.0)
+                piece.origin = CGPoint(x: (CGFloat(xPoint) * 80.0) + 8.0, y: (CGFloat(yPoint) * 80.0) + 5.0)
                 
-                let CGSquare = (image.cropping(to: toRect))!
+                let CGSquare = (croppedCGImage.cropping(to: piece))!
                 var confidenceFlag = false
                 guard let square = UIImage(cgImage: CGSquare, scale: 1.0, orientation: .right).resize(to: size) else { fatalError("Cannot retrieve square pieces") }
                 guard let result = try? mnistCNN().prediction(image: square.pixelBuffer()!) else { fatalError("Cannot identify square pieces") }
@@ -91,6 +159,36 @@ class ImageViewController: UIViewController {
                 }
             }
         }
+    }
+    
+    func registerForKeyboardNotifications(){
+        //Adding notifies on keyboard appearing
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWasShown(notification:)), name: NSNotification.Name.UIKeyboardWillShow, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillBeHidden(notification:)), name: NSNotification.Name.UIKeyboardWillHide, object: nil)
+    }
+
+    func deregisterFromKeyboardNotifications(){
+        //Removing notifies on keyboard appearing
+        NotificationCenter.default.removeObserver(self, name: NSNotification.Name.UIKeyboardWillShow, object: nil)
+        NotificationCenter.default.removeObserver(self, name: NSNotification.Name.UIKeyboardWillHide, object: nil)
+    }
+
+    @objc func keyboardWasShown(notification: NSNotification) {
+        var info = notification.userInfo!
+        let keyboardSize = (info[UIKeyboardFrameBeginUserInfoKey] as? NSValue)?.cgRectValue.size
+
+        let contentInsets = UIEdgeInsets(top: 0, left: 0, bottom: keyboardSize!.height, right: 0)
+        collectionView.contentInset = contentInsets
+        collectionView.scrollIndicatorInsets = contentInsets
+    }
+
+    @objc func keyboardWillBeHidden(notification: NSNotification) {
+        var info = notification.userInfo!
+        let keyboardSize = (info[UIKeyboardFrameBeginUserInfoKey] as? NSValue)?.cgRectValue.size
+
+        let contentInsets = UIEdgeInsets(top: 0, left: 0, bottom: -keyboardSize!.height, right: 0)
+        collectionView.contentInset = contentInsets
+        collectionView.scrollIndicatorInsets = contentInsets
     }
 
     

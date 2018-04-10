@@ -99,6 +99,7 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
     }
 
     @IBAction func takePictureOnTap(_ sender: Any) {
+        // Start the loading animation and use the boolean to indicate that a capture has started
         takePhoto = true
         LoadingLabel.startAnimating()
         view.addSubview(LoadingLabel)
@@ -107,7 +108,7 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
     func captureOutput(_ output: AVCaptureOutput, didOutput sampleBuffer: CMSampleBuffer, from connection: AVCaptureConnection) {
         // Uses the takePhoto boolean value to determine when a photo can be taken
         if takePhoto {
-            // Reset takePhoto boolean and start the loading animation
+            // Reset takePhoto boolean
             takePhoto = false
             
             if let image = self.getImageFromSampleBuffer(buffer: sampleBuffer) {

@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		BE221CDE2051D35500CC4BCB /* BacktrackAlgorithm.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE221CDD2051D35500CC4BCB /* BacktrackAlgorithm.swift */; };
+		BE362103207C0920006A4567 /* CollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE362102207C0920006A4567 /* CollectionViewCell.swift */; };
 		BE87C3662063F28C00E8A8DC /* ImageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE87C3652063F28C00E8A8DC /* ImageViewController.swift */; };
 		BE87C37D207196F000E8A8DC /* GPUImage.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BE87C3772071969300E8A8DC /* GPUImage.framework */; settings = {ATTRIBUTES = (Required, ); }; };
 		BE87C37F2071975200E8A8DC /* GPUImage.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = BE87C3772071969300E8A8DC /* GPUImage.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
@@ -101,6 +102,7 @@
 
 /* Begin PBXFileReference section */
 		BE221CDD2051D35500CC4BCB /* BacktrackAlgorithm.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BacktrackAlgorithm.swift; sourceTree = "<group>"; };
+		BE362102207C0920006A4567 /* CollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollectionViewCell.swift; sourceTree = "<group>"; };
 		BE87C3652063F28C00E8A8DC /* ImageViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageViewController.swift; sourceTree = "<group>"; };
 		BE87C36B2071969200E8A8DC /* GPUImage.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = GPUImage.xcodeproj; path = "../../../Downloads/GPUImage2-master/framework/GPUImage.xcodeproj"; sourceTree = "<group>"; };
 		BE87C380207197F800E8A8DC /* GPUImage.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; path = GPUImage.xcodeproj; sourceTree = "<group>"; };
@@ -184,6 +186,7 @@
 				BE87C3932072A56B00E8A8DC /* MNISTResize.swift */,
 				BE87C3972075615F00E8A8DC /* mnistCNN.mlmodel */,
 				BEF3EA8120361F7A00299E5E /* Main.storyboard */,
+				BE362102207C0920006A4567 /* CollectionViewCell.swift */,
 				BEF3EA8420361F7A00299E5E /* Assets.xcassets */,
 				BEF3EA8620361F7A00299E5E /* LaunchScreen.storyboard */,
 				BEF3EA8920361F7A00299E5E /* Info.plist */,
@@ -338,6 +341,7 @@
 				BE221CDE2051D35500CC4BCB /* BacktrackAlgorithm.swift in Sources */,
 				BEF3EA8020361F7A00299E5E /* ViewController.swift in Sources */,
 				BE87C3662063F28C00E8A8DC /* ImageViewController.swift in Sources */,
+				BE362103207C0920006A4567 /* CollectionViewCell.swift in Sources */,
 				BE87C3942072A56B00E8A8DC /* MNISTResize.swift in Sources */,
 				BEF3EA7E20361F7A00299E5E /* AppDelegate.swift in Sources */,
 				BE87C3982075615F00E8A8DC /* mnistCNN.mlmodel in Sources */,
