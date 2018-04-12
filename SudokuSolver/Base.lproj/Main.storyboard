@@ -11,7 +11,7 @@
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
-        <!--Image View Controller-->
+        <!--ImageVC-->
         <scene sceneID="gSG-jc-ytw">
             <objects>
                 <viewController storyboardIdentifier="ImageViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="dSH-Ty-dSA" customClass="ImageViewController" customModule="SudokuSolver" customModuleProvider="target" sceneMemberID="viewController">
@@ -48,17 +48,11 @@
                                             <rect key="frame" x="0.0" y="0.0" width="41" height="42"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" usesAttributedText="YES" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="1nY-dl-Wf0" userLabel="number">
+                                                <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" textAlignment="center" minimumFontSize="26" translatesAutoresizingMaskIntoConstraints="NO" id="1nY-dl-Wf0" userLabel="number">
                                                     <rect key="frame" x="1" y="3" width="38" height="37"/>
                                                     <autoresizingMask key="autoresizingMask" widthSizable="YES"/>
-                                                    <attributedString key="attributedText">
-                                                        <fragment content="0">
-                                                            <attributes>
-                                                                <font key="NSFont" size="30" name=".AppleSystemUIFont"/>
-                                                                <paragraphStyle key="NSParagraphStyle" alignment="center" lineBreakMode="wordWrapping" baseWritingDirection="natural" tighteningFactorForTruncation="0.0"/>
-                                                            </attributes>
-                                                        </fragment>
-                                                    </attributedString>
+                                                    <nil key="textColor"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="26"/>
                                                     <textInputTraits key="textInputTraits" autocorrectionType="no" spellCheckingType="no" keyboardType="numberPad" returnKeyType="done" smartDashesType="no" smartInsertDeleteType="no" smartQuotesType="no"/>
                                                     <connections>
                                                         <outlet property="delegate" destination="dSH-Ty-dSA" id="bGW-5v-dil"/>
@@ -67,6 +61,7 @@
                                             </subviews>
                                         </view>
                                         <connections>
+                                            <outlet property="imageVC" destination="dSH-Ty-dSA" id="L8v-7A-vld"/>
                                             <outlet property="number" destination="1nY-dl-Wf0" id="emV-lU-eKf"/>
                                         </connections>
                                     </collectionViewCell>

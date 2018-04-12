@@ -10,7 +10,8 @@ import UIKit
 
 class CollectionViewCell: UICollectionViewCell {
     @IBOutlet weak var number: UITextField!
-    let imageVC: ImageViewController! = nil
+    @IBOutlet weak var imageVC: ImageViewController!
+    //let imageVC: ImageViewController! = nil
     
     override func awakeFromNib() {
         number.addTarget(self, action: #selector(textFieldDidChange(_:)), for: .editingChanged)
@@ -32,7 +33,7 @@ class CollectionViewCell: UICollectionViewCell {
             imageVC.value[index] = Int(text)!
             imageVC.color[index] = false
         } else {
-            imageVC.value[index] = -1
+            imageVC.value[index] = 0
             imageVC.color[index] = true
         }
     }
