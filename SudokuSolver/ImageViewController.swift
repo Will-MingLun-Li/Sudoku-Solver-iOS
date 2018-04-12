@@ -22,6 +22,9 @@ class ImageViewController: UIViewController, UICollectionViewDelegate, UICollect
     var originalImage : UIImage?
     var thresholdImage : UIImage?
     
+    var value = [Int]()
+    var color = [Bool]()
+    
     var screenSize : CGRect!
     var screenWidth : CGFloat!
     var screenHeight : CGFloat!
@@ -106,17 +109,16 @@ class ImageViewController: UIViewController, UICollectionViewDelegate, UICollect
         cell.number.tag = indexPath.row
 
         cell.number.textColor = UIColor.black
-//        if (color[indexPath.row]) {
-//            cell.number.textColor = UIColor.blue
-//        } else {
-//            cell.number.textColor = UIColor.black
-//        }
+        if (color[indexPath.row]) {
+            cell.number.textColor = UIColor.blue
+        } else {
+            cell.number.textColor = UIColor.black
+        }
 
-        cell.number.text = String(0)
-//        let digit = puzzle[indexPath.row]
-//        if digit != -1 {
-//            cell.digit.text = String(digit)
-//        }
+        let digit = value[indexPath.row]
+        if digit != 0 {
+            cell.number.text = String(digit)
+        }
 
         cell.layer.borderColor = UIColor.gray.cgColor
         cell.layer.borderWidth = 1
@@ -154,8 +156,12 @@ class ImageViewController: UIViewController, UICollectionViewDelegate, UICollect
                 }
                 if (confidenceFlag == true) {
                     sudokuBoard[xPoint][8 - yPoint] = SudokuClass.Square(integerLiteral: Int(result.classLabel)!)
+                    value.append(Int(result.classLabel)!)
+                    color.append(true)
                 } else {
                     sudokuBoard[xPoint][8 - yPoint] = SudokuClass.Square(integerLiteral: 0)
+                    value.append(0)
+                    color.append(false)
                 }
             }
         }
@@ -181,7 +187,7 @@ class ImageViewController: UIViewController, UICollectionViewDelegate, UICollect
         collectionView.contentInset = contentInsets
         collectionView.scrollIndicatorInsets = contentInsets
     }
-
+    
     @objc func keyboardWillBeHidden(notification: NSNotification) {
         var info = notification.userInfo!
         let keyboardSize = (info[UIKeyboardFrameBeginUserInfoKey] as? NSValue)?.cgRectValue.size

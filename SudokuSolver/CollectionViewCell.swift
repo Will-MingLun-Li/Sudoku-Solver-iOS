@@ -10,6 +10,7 @@ import UIKit
 
 class CollectionViewCell: UICollectionViewCell {
     @IBOutlet weak var number: UITextField!
+    let imageVC: ImageViewController! = nil
     
     override func awakeFromNib() {
         number.addTarget(self, action: #selector(textFieldDidChange(_:)), for: .editingChanged)
@@ -28,11 +29,11 @@ class CollectionViewCell: UICollectionViewCell {
     @objc func textFieldDidChange(_ textField: UITextField) {
         let index = number.tag
         if let text = number.text, !text.isEmpty {
-            //parentVC.puzzle[index] = Int(text)!
-            //parentVC.color[index] = false
+            imageVC.value[index] = Int(text)!
+            imageVC.color[index] = false
         } else {
-            //parentVC.puzzle[index] = -1
-            //parentVC.color[index] = true
+            imageVC.value[index] = -1
+            imageVC.color[index] = true
         }
     }
 }

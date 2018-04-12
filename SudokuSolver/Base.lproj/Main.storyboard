@@ -52,7 +52,7 @@
                                                     <rect key="frame" x="1" y="3" width="38" height="37"/>
                                                     <autoresizingMask key="autoresizingMask" widthSizable="YES"/>
                                                     <attributedString key="attributedText">
-                                                        <fragment content="8">
+                                                        <fragment content="0">
                                                             <attributes>
                                                                 <font key="NSFont" size="30" name=".AppleSystemUIFont"/>
                                                                 <paragraphStyle key="NSParagraphStyle" alignment="center" lineBreakMode="wordWrapping" baseWritingDirection="natural" tighteningFactorForTruncation="0.0"/>
