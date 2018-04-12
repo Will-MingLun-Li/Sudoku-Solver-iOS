@@ -9,6 +9,8 @@
   - ~~~Somewhere along the lines we might have to convert the photo to Black and White so MNIST can read it~~~
   - ~~~If it is, divide into 81 individual squares and run it through MNIST~~~
   - ~~~Populate 2D array using MNIST~~~
-  - Create a custom Sudoku grid that allow users to fix false values
+  - ~~~Create a custom Sudoku grid~~~
+  - ~~~Allow users to fix false values~~~
+  - Update the 2D array with the updated value
   - Run the solve algorithm to solve the sudoku
-  - Make UI for the custom Sudoku grid
+  - Display the solution 
