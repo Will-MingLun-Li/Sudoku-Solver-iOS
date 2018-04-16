@@ -133,7 +133,7 @@ class SudokuClass {
         for row in s {
             for val in row {
                 switch val {
-                case .Empty:               print(".", terminator: "")
+                case .Empty:              print(".", terminator: "")
                 case .Marked(let mark):   print(mark.value, terminator: "")
                 }
             }

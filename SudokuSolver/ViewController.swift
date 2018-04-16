@@ -16,8 +16,6 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
     @IBOutlet weak var scannerImg: UIImageView!
     @IBOutlet weak var LoadingLabel: UIActivityIndicatorView!
     
-    var solveSudoku: SudokuClass!
-    
     // MARK: Camera Session Variables
     let captureSession = AVCaptureSession()
     var previewLayer : CALayer!
@@ -31,32 +29,6 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
         // Modifying the picture button to make it circular
         picButton.layer.cornerRadius = picButton.frame.size.width / 2
         picButton.clipsToBounds = true
-        
-        solveSudoku = SudokuClass()
-        
-        /* let example: SudokuClass.SudokuBoard = [
-            [5, 3, 0,  0, 7, 0,  0, 0, 0],
-            [6, 0, 0,  1, 9, 5,  0, 0, 0],
-            [0, 9, 8,  0, 0, 0,  0, 6, 0],
-            
-            [8, 0, 0,  0, 6, 0,  0, 0, 3],
-            [4, 0, 0,  8, 0, 3,  0, 0, 1],
-            [7, 0, 0,  0, 2, 0,  0, 0, 6],
-            
-            [0, 6, 0,  0, 0, 0,  2, 8, 0],
-            [0, 0, 0,  4, 1, 9,  0, 0, 5],
-            [0, 0, 0,  0, 8, 0,  0, 7, 0],
-        ]
-        
-        print("\nPuzzle:")
-        solveSudoku.printSudoku(example)
-        if let solutionForExample = solveSudoku.SolveSudoku(example) {
-            print("\nSolution:")
-            solveSudoku.printSudoku(solutionForExample)
-        }
-        else {
-            print("No solution")
-        } */
     }
     
     override func viewWillAppear(_ animated: Bool) {

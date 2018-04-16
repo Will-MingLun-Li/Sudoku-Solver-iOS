@@ -17,6 +17,27 @@ class ImageViewController: UIViewController, UICollectionViewDelegate, UICollect
     @IBAction func goBack(_ sender: Any) {
         self.dismiss(animated: true, completion: nil)
     }
+    @IBAction func solveSudoku(_ sender: Any) {
+        let board: SudokuClass.SudokuBoard = sudokuBoard
+        
+        if let solution = sudokuClass.SolveSudoku(board) {
+            var val = 0
+            for row in 0...8 {
+                for col in 0...8 {
+                    switch solution[row][col] {
+                    case .Marked(let mark): value[val] = mark.value
+                    case .Empty:            value[val] = 0
+                    }
+
+                    val += 1
+                }
+            }
+            
+            self.collectionView.reloadData()
+        } else {
+            print("No solution")
+        }
+    }
     
     // MARK: Variables
     var originalImage : UIImage?
@@ -108,7 +129,6 @@ class ImageViewController: UIViewController, UICollectionViewDelegate, UICollect
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "cell", for: indexPath) as! CollectionViewCell
         cell.number.tag = indexPath.row
 
-        cell.number.textColor = UIColor.black
         if (color[indexPath.row]) {
             cell.number.textColor = UIColor.blue
         } else {

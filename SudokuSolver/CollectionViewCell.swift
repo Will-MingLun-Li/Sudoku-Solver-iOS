@@ -11,7 +11,6 @@ import UIKit
 class CollectionViewCell: UICollectionViewCell {
     @IBOutlet weak var number: UITextField!
     @IBOutlet weak var imageVC: ImageViewController!
-    //let imageVC: ImageViewController! = nil
     
     override func awakeFromNib() {
         number.addTarget(self, action: #selector(textFieldDidChange(_:)), for: .editingChanged)
@@ -29,12 +28,18 @@ class CollectionViewCell: UICollectionViewCell {
     
     @objc func textFieldDidChange(_ textField: UITextField) {
         let index = number.tag
+        
+        let row = index / 9;
+        let col = index % 9;
+        
         if let text = number.text, !text.isEmpty {
             imageVC.value[index] = Int(text)!
-            imageVC.color[index] = false
+            imageVC.color[index] = true
+            imageVC.sudokuBoard[row][col] = SudokuClass.Square(integerLiteral: Int(text)!)
         } else {
             imageVC.value[index] = 0
-            imageVC.color[index] = true
+            imageVC.color[index] = false
+            imageVC.sudokuBoard[row][col] = SudokuClass.Square(integerLiteral: 0)
         }
     }
 }
