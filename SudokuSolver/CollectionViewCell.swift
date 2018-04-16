@@ -26,6 +26,7 @@ class CollectionViewCell: UICollectionViewCell {
         number.inputAccessoryView = keypadToolbar
     }
     
+    // Update the value in grid when the user updates it
     @objc func textFieldDidChange(_ textField: UITextField) {
         let index = number.tag
         

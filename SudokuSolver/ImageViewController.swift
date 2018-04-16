@@ -33,8 +33,10 @@ class ImageViewController: UIViewController, UICollectionViewDelegate, UICollect
                 }
             }
             
+            // Reload the grid with the solved values
             self.collectionView.reloadData()
         } else {
+            // Alert view for if no possible solution is found
             let alert = UIAlertController(title: "No Solution", message: "Please Modify the False Values", preferredStyle: UIAlertControllerStyle.alert)
             alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: nil))
             self.present(alert, animated: true, completion: nil)
@@ -52,7 +54,7 @@ class ImageViewController: UIViewController, UICollectionViewDelegate, UICollect
     var screenWidth : CGFloat!
     var screenHeight : CGFloat!
     
-    // MARK: Class
+    // MARK: Sudoku Class
     var sudokuClass : SudokuClass!
     var sudokuBoard : SudokuClass.SudokuBoard = [[SudokuClass.Square]](repeating: [SudokuClass.Square](repeating: 0, count: 9), count: 9)
     
@@ -131,6 +133,7 @@ class ImageViewController: UIViewController, UICollectionViewDelegate, UICollect
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "cell", for: indexPath) as! CollectionViewCell
         cell.number.tag = indexPath.row
 
+        // Set inital values blue and solved values black
         if (color[indexPath.row]) {
             cell.number.textColor = UIColor.blue
         } else {
@@ -176,6 +179,8 @@ class ImageViewController: UIViewController, UICollectionViewDelegate, UICollect
                         break
                     }
                 }
+                
+                // Filter out all of the confidence < 0.6 and assume they are just blank
                 if (confidenceFlag == true) {
                     sudokuBoard[xPoint][8 - yPoint] = SudokuClass.Square(integerLiteral: Int(result.classLabel)!)
                     value.append(Int(result.classLabel)!)

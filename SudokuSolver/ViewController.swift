@@ -31,6 +31,7 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
         picButton.clipsToBounds = true
     }
     
+    // Make sure camera would still work after back button was pressed
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         prepareCamera()
