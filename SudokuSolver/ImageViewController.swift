@@ -35,7 +35,9 @@ class ImageViewController: UIViewController, UICollectionViewDelegate, UICollect
             
             self.collectionView.reloadData()
         } else {
-            print("No solution")
+            let alert = UIAlertController(title: "No Solution", message: "Please Modify the False Values", preferredStyle: UIAlertControllerStyle.alert)
+            alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: nil))
+            self.present(alert, animated: true, completion: nil)
         }
     }
     
